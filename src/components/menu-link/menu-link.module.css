@@ -1,0 +1,8 @@
+.container {
+  @apply p-5 flex items-center gap-3 hover:bg-quaternary-color hover:text-primary-color
+  mt-1 mb-1 
+}
+
+.active{
+  @apply bg-quaternary-color text-primary-color
+}

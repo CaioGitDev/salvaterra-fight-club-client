@@ -1,0 +1,38 @@
+{
+    "items": [
+        {
+            "key": "$base-accent",
+            "value": "rgba(205, 143, 23, 1)"
+        },
+        {
+            "key": "$base-text-color",
+            "value": "rgba(217, 217, 217, 1)"
+        },
+        {
+            "key": "$base-border-color",
+            "value": "rgba(44, 45, 51, 1)"
+        },
+        {
+            "key": "$base-bg",
+            "value": "rgba(23, 24, 33, 1)"
+        },
+        {
+            "key": "$datagrid-columnchooser-item-color",
+            "value": "rgba(205, 143, 23, 1)"
+        },
+        {
+            "key": "$datagrid-columnchooser-font-weight",
+            "value": "500"
+        },
+        {
+            "key": "$datagrid-menu-icon-color",
+            "value": "rgba(205, 143, 23, 1)"
+        }
+    ],
+    "baseTheme": "material.blue.dark",
+    "outputColorScheme": "salvaterra-fight-club-theme",
+    "makeSwatch": false,
+    "version": "23.1.6",
+    "widgets": [],
+    "removeExternalResources": false
+}
