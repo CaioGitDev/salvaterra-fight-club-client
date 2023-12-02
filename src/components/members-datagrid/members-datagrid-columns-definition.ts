@@ -3,19 +3,19 @@ import { ServiceDataType } from '@/data/members-seed/members-datagrid-seed'
 export default function getColumnsDefinition(serviceData: ServiceDataType) {
   return [
     {
-      dataField: 'member.id',
+      dataField: 'id',
       visible: false,
     },
     {
-      dataField: 'member.membershipNumber',
+      dataField: 'membershipNumber',
       caption: 'Nº Socio',
     },
     {
-      dataField: 'member.fullName',
+      dataField: 'fullName',
       caption: 'Nome Completo',
     },
     {
-      dataField: 'member.gender_id',
+      dataField: 'genderId',
       caption: 'genero',
       lookup: {
         dataSource: serviceData.getGengerList(),
@@ -24,13 +24,14 @@ export default function getColumnsDefinition(serviceData: ServiceDataType) {
       },
     },
     {
-      dataField: 'member.dateOfBirth',
+      dataField: 'dateOfBirth',
       caption: 'Data Nascimento',
       visible: false,
     },
     {
-      dataField: 'member.nationality_id',
+      dataField: 'nationalityId',
       caption: 'Nacionalidade',
+      visible: false,
       lookup: {
         dataSource: serviceData.getNacionalitiesList(),
         valueExpr: 'id',
@@ -38,40 +39,41 @@ export default function getColumnsDefinition(serviceData: ServiceDataType) {
       },
     },
     {
-      dataField: 'member.placeOfBirth',
+      dataField: 'placeOfBirth',
       visible: false,
     },
     {
-      dataField: 'member.contact',
+      dataField: 'contact',
       visible: false,
     },
     {
-      dataField: 'member.email',
+      dataField: 'email',
       visible: false,
     },
     {
-      dataField: 'memberAddress.address',
+      dataField: 'Address.address',
       visible: false,
     },
     {
-      dataField: 'memberAddress.city',
+      dataField: 'Address.city',
       visible: false,
     },
     {
-      dataField: 'memberAddress.county',
+      dataField: 'Address.county',
       visible: false,
     },
     {
-      dataField: 'memberAddress.parish',
+      dataField: 'Address.parish',
       visible: false,
     },
     {
-      dataField: 'memberAddress.postalCode',
+      dataField: 'Address.postalCode',
       visible: false,
     },
     {
-      dataField: 'memberIdentificationDocument.identificationDocument_id',
+      dataField: 'IdentityDocument.identityDocumentTypeId',
       caption: 'Doc. Identificação',
+      visible: false,
       lookup: {
         dataSource: serviceData.getIdentificationDocumentList(),
         valueExpr: 'id',
@@ -79,28 +81,28 @@ export default function getColumnsDefinition(serviceData: ServiceDataType) {
       },
     },
     {
-      dataField: 'memberIdentificationDocument.identificationNumber',
+      dataField: 'IdentityDocument.identificationNumber',
       visible: false,
     },
     {
-      dataField: 'memberIdentificationDocument.expireDate',
+      dataField: 'IdentityDocument.expireDate',
       visible: false,
     },
     {
-      dataField: 'memberIdentificationDocument.taxIdentificationNumber',
+      dataField: 'IdentityDocument.taxIdentificationNumber',
       visible: false,
     },
 
     {
-      dataField: 'memberGuardian.fullName',
+      dataField: 'Guardian.fullName',
       visible: false,
     },
     {
-      dataField: 'memberGuardian.contact',
+      dataField: 'Guardian.contact',
       visible: false,
     },
     {
-      dataField: 'memberGuardian.relationshipDegree_id',
+      dataField: 'Guardian.relationshipDegreeId',
       visible: false,
       lookup: {
         dataSource: serviceData.getRelationshipDegreeListList(),
@@ -109,27 +111,27 @@ export default function getColumnsDefinition(serviceData: ServiceDataType) {
       },
     },
     {
-      dataField: 'memberGuardian.address',
+      dataField: 'Guardian.address',
       visible: false,
     },
     {
-      dataField: 'memberGuardian.city',
+      dataField: 'Guardian.city',
       visible: false,
     },
     {
-      dataField: 'memberGuardian.county',
+      dataField: 'Guardian.county',
       visible: false,
     },
     {
-      dataField: 'memberGuardian.parish',
+      dataField: 'Guardian.parish',
       visible: false,
     },
     {
-      dataField: 'memberGuardian.postalCode',
+      dataField: 'Guardian.postalCode',
       visible: false,
     },
     {
-      dataField: 'member.modality_id',
+      dataField: 'modalityId',
       visible: true,
       caption: 'Modalidade',
       lookup: {
@@ -139,7 +141,7 @@ export default function getColumnsDefinition(serviceData: ServiceDataType) {
       },
     },
     {
-      dataField: 'member.frequency_id',
+      dataField: 'frequencyId',
       visible: true,
       caption: 'Frequência',
       lookup: {
@@ -149,7 +151,7 @@ export default function getColumnsDefinition(serviceData: ServiceDataType) {
       },
     },
     {
-      dataField: 'member.memberType_id',
+      dataField: 'memberTypeId',
       visible: false,
       caption: 'Tipo de inscrição',
       lookup: {
@@ -159,8 +161,8 @@ export default function getColumnsDefinition(serviceData: ServiceDataType) {
       },
     },
     {
-      dataField: 'member.paymentFrequency_id',
-      visible: true,
+      dataField: 'paymentFrequencyId',
+      visible: false,
       caption: 'Periodicidade de pagamentos',
       lookup: {
         dataSource: serviceData.getPaymentFrequencyList(),
@@ -169,11 +171,11 @@ export default function getColumnsDefinition(serviceData: ServiceDataType) {
       },
     },
     {
-      dataField: 'member.termsAndConditions',
+      dataField: 'termsAndConditions',
       visible: false,
     },
     {
-      dataField: 'member.healthDeclaration',
+      dataField: 'healthDeclaration',
       visible: false,
     },
   ]

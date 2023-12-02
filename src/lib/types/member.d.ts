@@ -27,11 +27,11 @@ export type Member = {
 }
 export type MemberIdentificationDocument = {
   id: string
-  member_id: string
-  identificationDocument_id: number
+  memberId: string
+  identityDocumentTypeId: number
   identificationNumber: string
   expireDate: Date
-  taxIdentificationNumber: number
+  taxIdentificationNumber: string
   createdAt: Date
   updatedAt?: Date
   updatedBy?: string
@@ -39,7 +39,7 @@ export type MemberIdentificationDocument = {
 
 export type MemberAddress = {
   id: string
-  member_id: string
+  memberId: string
   address: string
   city: string
   county: string
@@ -49,10 +49,10 @@ export type MemberAddress = {
 
 export type MemberGuardian = {
   id: string
-  member_id: string
+  memberId: string
   fullName: string
   contact: string
-  relationshipDegree_id: number
+  relationshipDegreeId: number
   address: string
   city: string
   county: string
@@ -67,9 +67,28 @@ export type MemberModality = {
   modality_name: string
 }
 
-export interface MemberDataInterface {
-  member: Member
-  memberIdentificationDocument: MemberIdentificationDocument
-  memberAddress: MemberAddress
-  memberGuardian?: MemberGuardian
+export type MemberDataInterface = {
+  id: string
+  membershipNumber?: number
+  photoUrl: string
+  fullName: string
+  genderId: number
+  dateOfBirth: Date
+  nationalityId: number
+  placeOfBirth: string
+  contact: string
+  email: string
+  modalityId: number
+  frequencyId: number
+  memberTypeId: number
+  paymentFrequencyId: number
+  termsAndConditions: boolean
+  healthDeclaration: boolean
+  createdAt: Date
+  updatedAt?: Date
+  updatedBy?: string
+  active: boolean
+  IdentityDocument: MemberIdentificationDocument
+  Address: MemberAddress
+  Guardian?: MemberGuardian
 }

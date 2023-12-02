@@ -1,173 +1,13 @@
 import { MemberDataInterface, OptionLists } from '@/lib/types/member'
 
-const membersData: MemberDataInterface[] = [
-  {
-    member: {
-      id: '1',
-      membershipNumber: 12345,
-      photoUrl: 'https://example.com/photo1.jpg',
-      fullName: 'John Doe',
-      gender_id: 1,
-      dateOfBirth: new Date('1990-01-15'),
-      nationality_id: 1,
-      placeOfBirth: 'Lisbon',
-      contact: '123456789',
-      email: 'john.doe@example.com',
-      modality_id: 3,
-      frequency_id: 1,
-      paymentFrequency_id: 2,
-      memberType_id: 1,
-      termsAndConditions: true,
-      healthDeclaration: true,
-      createdAt: new Date('2022-01-01'),
-      updatedAt: new Date('2022-02-15'),
-      updatedBy: 'admin',
-      active: true,
-    },
-    memberIdentificationDocument: {
-      id: '1',
-      member_id: '1',
-      identificationDocument_id: 2,
-      identificationNumber: 'AB123456',
-      expireDate: new Date('2025-01-15'),
-      taxIdentificationNumber: 67890,
-      createdAt: new Date('2022-01-02'),
-      updatedAt: new Date('2022-02-10'),
-      updatedBy: 'admin',
-    },
-    memberAddress: {
-      id: '1',
-      member_id: '1',
-      address: '123 Main St',
-      city: 'Lisbon',
-      county: 'Lisbon',
-      parish: 'Parish A',
-      postalCode: '12345-678',
-    },
-    memberGuardian: {
-      id: '1',
-      member_id: '1',
-      fullName: 'Jane Doe',
-      contact: '987654321',
-      relationshipDegree_id: 2,
-      address: '456 Broad St',
-      city: 'Lisbon',
-      county: 'Lisbon',
-      parish: 'Parish B',
-      postalCode: '5421-876',
-    },
-  },
-  {
-    member: {
-      id: '2',
-      membershipNumber: 54321,
-      photoUrl: 'https://example.com/photo2.jpg',
-      fullName: 'Alice Smith',
-      gender_id: 2,
-      dateOfBirth: new Date('1985-08-20'),
-      nationality_id: 3,
-      placeOfBirth: 'New York',
-      contact: '987654321',
-      email: 'alice.smith@example.com',
-      modality_id: 2,
-      frequency_id: 2,
-      paymentFrequency_id: 3,
-      memberType_id: 2,
-      termsAndConditions: true,
-      healthDeclaration: true,
-      createdAt: new Date('2022-01-05'),
-      updatedAt: new Date('2022-02-20'),
-      updatedBy: 'admin',
-      active: true,
-    },
-    memberIdentificationDocument: {
-      id: '2',
-      member_id: '2',
-      identificationDocument_id: 4,
-      identificationNumber: 'CD987654',
-      expireDate: new Date('2024-08-20'),
-      taxIdentificationNumber: 54321,
-      createdAt: new Date('2022-01-08'),
-      updatedAt: new Date('2022-03-01'),
-      updatedBy: 'admin',
-    },
-    memberAddress: {
-      id: '2',
-      member_id: '2',
-      address: '789 Oak St',
-      city: 'New York',
-      county: 'Manhattan',
-      parish: 'Parish C',
-      postalCode: '6790-123',
-    },
-  },
-]
-
-export const memberDataDefault: MemberDataInterface = {
-  member: {
-    id: '',
-    membershipNumber: 0,
-    photoUrl: '',
-    fullName: '',
-    gender_id: 0,
-    dateOfBirth: new Date(),
-    nationality_id: 0,
-    placeOfBirth: '',
-    contact: '',
-    email: '',
-    modality_id: 0,
-    frequency_id: 0,
-    paymentFrequency_id: 0,
-    memberType_id: 0,
-    termsAndConditions: false,
-    healthDeclaration: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    updatedBy: '',
-    active: true,
-  },
-  memberIdentificationDocument: {
-    id: '',
-    member_id: '',
-    identificationDocument_id: 0,
-    identificationNumber: '',
-    expireDate: new Date(),
-    taxIdentificationNumber: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    updatedBy: '',
-  },
-  memberAddress: {
-    id: '',
-    member_id: '',
-    address: '',
-    city: '',
-    county: '',
-    parish: '',
-    postalCode: '',
-  },
-  memberGuardian: {
-    id: '',
-    member_id: '',
-    fullName: '',
-    contact: '',
-    relationshipDegree_id: 0,
-    address: '',
-    city: '',
-    county: '',
-    parish: '',
-    postalCode: '',
-  },
-}
-
 const gengerList: OptionLists[] = [
   {
     id: 1,
-    text: 'Homem',
+    text: 'Masculino',
   },
   {
     id: 2,
-    text: 'Mulher',
+    text: 'Feminino',
   },
   {
     id: 3,
@@ -186,27 +26,51 @@ const nacionalitiesList: OptionLists[] = [
   },
   {
     id: 3,
-    text: 'Inglês',
-  },
-  {
-    id: 4,
     text: 'Ucraniano',
   },
   {
-    id: 5,
+    id: 4,
     text: 'Espanhol',
   },
   {
+    id: 5,
+    text: 'Francês',
+  },
+  {
     id: 6,
-    text: 'Alemão',
+    text: 'Inglês',
   },
   {
     id: 7,
-    text: 'Marroquino',
+    text: 'Alemão',
   },
   {
     id: 8,
+    text: 'Italiano',
+  },
+  {
+    id: 9,
     text: 'Russo',
+  },
+  {
+    id: 10,
+    text: 'Chinês',
+  },
+  {
+    id: 11,
+    text: 'Japonês',
+  },
+  {
+    id: 12,
+    text: 'Marroquino',
+  },
+  {
+    id: 13,
+    text: 'Paquistanês',
+  },
+  {
+    id: 14,
+    text: 'Indiano',
   },
 ]
 
@@ -217,34 +81,26 @@ const identificationDocumentList: OptionLists[] = [
   },
   {
     id: 2,
-    text: 'Bilhete de identidade',
+    text: 'Autorização de Residência',
   },
   {
     id: 3,
-    text: 'Cartão de residência',
+    text: 'Bilhete de Identidade',
   },
   {
     id: 4,
     text: 'Passaporte',
-  },
-  {
-    id: 5,
-    text: 'Autorização',
-  },
-  {
-    id: 6,
-    text: 'Título de residência',
   },
 ]
 
 const relationshipDegreeList: OptionLists[] = [
   {
     id: 1,
-    text: 'Mãe',
+    text: 'Pai',
   },
   {
     id: 2,
-    text: 'Pai',
+    text: 'Mãe',
   },
   {
     id: 3,
@@ -262,6 +118,14 @@ const relationshipDegreeList: OptionLists[] = [
     id: 6,
     text: 'Avô',
   },
+  {
+    id: 7,
+    text: 'Tio',
+  },
+  {
+    id: 8,
+    text: 'Tia',
+  },
 ]
 
 const modalitiesList: OptionLists[] = [
@@ -271,11 +135,11 @@ const modalitiesList: OptionLists[] = [
   },
   {
     id: 2,
-    text: 'Jiu-Jitsu',
+    text: 'Jiu Jitsu',
   },
   {
     id: 3,
-    text: 'Muay Thai/Jiu-Jitsu',
+    text: 'Muay Thai + Jiu-Jitsu',
   },
 ]
 
@@ -297,11 +161,19 @@ const memberTypeList: OptionLists[] = [
   },
   {
     id: 2,
-    text: 'Estudante',
+    text: 'Família',
   },
   {
     id: 3,
-    text: 'Família',
+    text: 'Estudante',
+  },
+  {
+    id: 4,
+    text: 'Administração',
+  },
+  {
+    id: 5,
+    text: 'Professor',
   },
 ]
 
@@ -316,12 +188,15 @@ const paymentFrequencyList: OptionLists[] = [
   },
   {
     id: 3,
+    text: 'Semestral',
+  },
+  {
+    id: 4,
     text: 'Anual',
   },
 ]
 
 export type ServiceDataType = {
-  getMembers(): MemberDataInterface[]
   getGengerList(): OptionLists[]
   getNacionalitiesList(): OptionLists[]
   getIdentificationDocumentList(): OptionLists[]
@@ -333,9 +208,6 @@ export type ServiceDataType = {
 }
 
 export const serviceData: ServiceDataType = {
-  getMembers() {
-    return membersData
-  },
   getGengerList() {
     return gengerList
   },
