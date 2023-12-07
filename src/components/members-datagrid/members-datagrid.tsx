@@ -29,7 +29,6 @@ import {
 } from 'devextreme-react/form'
 import config from 'devextreme/core/config'
 import Button from 'devextreme-react/button'
-import { createStore } from 'devextreme-aspnet-data-nojquery'
 
 config({
   editorStylingMode: 'underlined',
@@ -38,6 +37,9 @@ config({
 const exportFormats = ['xlsx', 'pdf']
 
 const datepickOptions = {
+  placeholder: 'dd-MM-yyyy',
+  showClearButton: true,
+  useMaskBehavior: true,
   displayFormat: 'dd-MM-yyyy',
   openOnFieldClick: true,
   type: 'date',
@@ -59,6 +61,8 @@ const postalCodeOptions = {
   maskInvalidMessage: 'Código postal deve ter o formato correto',
 }
 const apiUrl = 'http://localhost:3333'
+const accessToken =
+  'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMTA3YTgzNS1kYzNmLTQ5OGItYWJlZS1kOTM1NDJmYTg1YjYiLCJpYXQiOjE3MDE0NDQyODR9.jcIWRbC3lWJR2wyJ8SKUzn3hsG5Ti8ZwhQXSWuP1bFLefiOoUGRQDPfrcTthRDg-6PWg5xiuHI6CBNvC460R3wO7ou30_ejfqZAVocI09S7id8eq8kaoqJTpvEHHmRk5_iCA8E-Vu7g6L1HO7DQxwrYjS_y8qjOEFtb2-xd-IRQ-ncRJLvKZC1fQzrE2Ckskc125jJtag-GaCi_M3d-yCKkStZrQePvm37KnaSgeuPJqmH_dYFtflyaSc2umBiShhHJ7Nve7G_srjXRT6-UC2KVlRuBuojjPetz_wCOH0hWigJ6QWy7r90moXMETrQPV46uXAN8eewXUBXyxNgd3Ng'
 
 const MembersDataGrid = () => {
   const [gridDataSource, setGridDataSource] =
@@ -77,7 +81,7 @@ const MembersDataGrid = () => {
         load: async () => {
           const response = await fetch(`${apiUrl}/members`, {
             headers: {
-              Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMTA3YTgzNS1kYzNmLTQ5OGItYWJlZS1kOTM1NDJmYTg1YjYiLCJpYXQiOjE3MDE0NDQyODR9.jcIWRbC3lWJR2wyJ8SKUzn3hsG5Ti8ZwhQXSWuP1bFLefiOoUGRQDPfrcTthRDg-6PWg5xiuHI6CBNvC460R3wO7ou30_ejfqZAVocI09S7id8eq8kaoqJTpvEHHmRk5_iCA8E-Vu7g6L1HO7DQxwrYjS_y8qjOEFtb2-xd-IRQ-ncRJLvKZC1fQzrE2Ckskc125jJtag-GaCi_M3d-yCKkStZrQePvm37KnaSgeuPJqmH_dYFtflyaSc2umBiShhHJ7Nve7G_srjXRT6-UC2KVlRuBuojjPetz_wCOH0hWigJ6QWy7r90moXMETrQPV46uXAN8eewXUBXyxNgd3Ng`,
+              Authorization: `Bearer ${accessToken}`,
             },
           })
 
@@ -139,7 +143,7 @@ const MembersDataGrid = () => {
           const response = await fetch(`${apiUrl}/members`, {
             headers: {
               'content-type': 'application/json',
-              Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMTA3YTgzNS1kYzNmLTQ5OGItYWJlZS1kOTM1NDJmYTg1YjYiLCJpYXQiOjE3MDE0NDQyODR9.jcIWRbC3lWJR2wyJ8SKUzn3hsG5Ti8ZwhQXSWuP1bFLefiOoUGRQDPfrcTthRDg-6PWg5xiuHI6CBNvC460R3wO7ou30_ejfqZAVocI09S7id8eq8kaoqJTpvEHHmRk5_iCA8E-Vu7g6L1HO7DQxwrYjS_y8qjOEFtb2-xd-IRQ-ncRJLvKZC1fQzrE2Ckskc125jJtag-GaCi_M3d-yCKkStZrQePvm37KnaSgeuPJqmH_dYFtflyaSc2umBiShhHJ7Nve7G_srjXRT6-UC2KVlRuBuojjPetz_wCOH0hWigJ6QWy7r90moXMETrQPV46uXAN8eewXUBXyxNgd3Ng`,
+              Authorization: `Bearer ${accessToken}`,
             },
             method: 'POST',
             body: JSON.stringify(values),
@@ -149,6 +153,31 @@ const MembersDataGrid = () => {
           gridRef.current?.instance.getDataSource().reload()
 
           return data
+        },
+        update: async (key, values) => {
+          if (values.Address) {
+            const addressData = {
+              memberId: key,
+              address: values.Address.address,
+              city: values.Address.city,
+              county: values.Address.county,
+              parish: values.Address.parish,
+              postalCode: values.Address.postalCode,
+            }
+
+            const response = await fetch(`${apiUrl}/member/address`, {
+              headers: {
+                'content-type': 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+              },
+              method: 'PUT',
+              body: JSON.stringify(addressData),
+            })
+
+            const data = await response.json()
+            gridRef.current?.instance.getDataSource().reload()
+            console.log(data)
+          }
         },
       }),
     )
