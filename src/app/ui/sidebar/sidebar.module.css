@@ -1,5 +1,5 @@
 .container {
-  @apply   h-screen sticky border-r-[1px] border-tertiary-color
+  @apply    sticky border-r-[1px] border-tertiary-color h-full
 }
 
 .logo{
