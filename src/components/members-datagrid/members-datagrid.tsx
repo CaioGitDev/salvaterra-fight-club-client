@@ -155,6 +155,66 @@ const MembersDataGrid = () => {
           return data
         },
         update: async (key, values) => {
+          // check if member already has a guardian
+          if (values.Guardian) {
+            const {
+              fullName,
+              relationshipDegreeId,
+              contact,
+              address,
+              city,
+              county,
+              parish,
+              postalCode,
+            } = values.Guardian
+
+            await fetch(`${apiUrl}/member/${key}/guardian`, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }).then(async (response) => {
+              if (response.status === 200) {
+                await fetch(`${apiUrl}/member/guardian`, {
+                  headers: {
+                    'content-type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                  method: 'PUT',
+                  body: JSON.stringify({
+                    memberId: key,
+                    fullName,
+                    relationshipDegreeId,
+                    contact,
+                    address,
+                    city,
+                    county,
+                    parish,
+                    postalCode,
+                  }),
+                })
+              } else {
+                await fetch(`${apiUrl}/member/guardian`, {
+                  headers: {
+                    'content-type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                  method: 'POST',
+                  body: JSON.stringify({
+                    memberId: key,
+                    fullName,
+                    relationshipDegreeId,
+                    contact,
+                    address,
+                    city,
+                    county,
+                    parish,
+                    postalCode,
+                  }),
+                })
+              }
+            })
+          }
+
           if (values.Address) {
             const addressData = {
               memberId: key,
@@ -165,7 +225,7 @@ const MembersDataGrid = () => {
               postalCode: values.Address.postalCode,
             }
 
-            const response = await fetch(`${apiUrl}/member/address`, {
+            await fetch(`${apiUrl}/member/address`, {
               headers: {
                 'content-type': 'application/json',
                 Authorization: `Bearer ${accessToken}`,
@@ -173,10 +233,32 @@ const MembersDataGrid = () => {
               method: 'PUT',
               body: JSON.stringify(addressData),
             })
+          }
 
-            const data = await response.json()
-            gridRef.current?.instance.getDataSource().reload()
-            console.log(data)
+          if (values.IdentityDocument) {
+            const {
+              identityDocumentTypeId,
+              identificationNumber,
+              expireDate,
+              taxIdentificationNumber,
+            } = values.IdentityDocument
+
+            const identityDocumentData = {
+              memberId: key,
+              identityDocumentTypeId,
+              identificationNumber,
+              expireDate,
+              taxIdentificationNumber,
+            }
+
+            await fetch(`${apiUrl}/member/identity-document`, {
+              headers: {
+                'content-type': 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+              },
+              method: 'PUT',
+              body: JSON.stringify(identityDocumentData),
+            })
           }
         },
       }),
@@ -247,7 +329,7 @@ const MembersDataGrid = () => {
           useIcons={true}
           allowAdding={true}
           allowUpdating={true}
-          allowDeleting={true}
+          allowDeleting={false}
         >
           <Popup title="Membro" showTitle={true} width="90vw" height="80vh" />
           <Form showValidationSummary={true}>
