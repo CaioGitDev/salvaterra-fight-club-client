@@ -8,6 +8,7 @@ import {
   MdOutlineCreditCard,
   MdOutlineCalendarMonth,
   MdLogout,
+  MdOutlineInventory,
 } from 'react-icons/md'
 import MenuLink from '@/components/menu-link/menu-link'
 import Image from 'next/image'
@@ -42,6 +43,12 @@ const menuItems = [
         title: 'Pagamentos',
         path: '/payments',
         icon: <MdOutlineCreditCard />,
+      },
+      {
+        id: randomUUID(),
+        title: 'Inventório',
+        path: '/inventory',
+        icon: <MdOutlineInventory />,
       },
       {
         id: randomUUID(),
