@@ -29,6 +29,7 @@ import {
 } from 'devextreme-react/form'
 import config from 'devextreme/core/config'
 import Button from 'devextreme-react/button'
+import { ValueChangedEvent } from 'devextreme/ui/text_box'
 
 config({
   editorStylingMode: 'underlined',
@@ -60,6 +61,14 @@ const postalCodeOptions = {
   },
   maskInvalidMessage: 'Código postal deve ter o formato correto',
 }
+
+export type PostalCodeType = {
+  county: string
+  city: string
+  parish: string
+  streets: string[]
+}
+
 const apiUrl = 'http://localhost:3333'
 const accessToken =
   'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMTA3YTgzNS1kYzNmLTQ5OGItYWJlZS1kOTM1NDJmYTg1YjYiLCJpYXQiOjE3MDE0NDQyODR9.jcIWRbC3lWJR2wyJ8SKUzn3hsG5Ti8ZwhQXSWuP1bFLefiOoUGRQDPfrcTthRDg-6PWg5xiuHI6CBNvC460R3wO7ou30_ejfqZAVocI09S7id8eq8kaoqJTpvEHHmRk5_iCA8E-Vu7g6L1HO7DQxwrYjS_y8qjOEFtb2-xd-IRQ-ncRJLvKZC1fQzrE2Ckskc125jJtag-GaCi_M3d-yCKkStZrQePvm37KnaSgeuPJqmH_dYFtflyaSc2umBiShhHJ7Nve7G_srjXRT6-UC2KVlRuBuojjPetz_wCOH0hWigJ6QWy7r90moXMETrQPV46uXAN8eewXUBXyxNgd3Ng'
@@ -72,6 +81,45 @@ const MembersDataGrid = () => {
 
   const handleRefreshClick = useCallback(() => {
     gridRef.current?.instance.refresh()
+  }, [])
+
+  const handleEditorPreparing = useCallback((e: any) => {
+    if (e.parentType === 'dataRow' && e.dataField === 'Address.postalCode') {
+      e.editorOptions.onValueChanged = async function (arg: any) {
+        // get postal code data
+        const postalCode = arg.value.replace(/(\d{4})(\d{3})/, '$1-$2')
+        try {
+          const response = await fetch(
+            `https://json.geoapi.pt/codigo_postal/${postalCode}`,
+          )
+          if (response.ok) {
+            const postalCodeData: PostalCodeType = await response.json()
+
+            e.component.cellValue(
+              e.row.rowIndex,
+              'Address.city',
+              postalCodeData.city,
+            )
+            e.component.cellValue(
+              e.row.rowIndex,
+              'Address.county',
+              postalCodeData.county,
+            )
+            e.component.cellValue(
+              e.row.rowIndex,
+              'Address.parish',
+              postalCodeData.parish,
+            )
+          } else {
+            throw new Error('Failed to fetch postal code')
+          }
+        } catch (error) {
+          console.log(error)
+        }
+        e.setValue(arg.value)
+        gridRef.current?.instance.getDataSource().reload()
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -274,6 +322,7 @@ const MembersDataGrid = () => {
         defaultColumns={getColumnsDefinition(serviceData)}
         ref={gridRef}
         columnAutoWidth={true}
+        // onEditorPreparing={handleEditorPreparing}
       >
         <SearchPanel visible width={200} placeholder="Pesquisa de Membro" />
         <Export enabled allowExportSelectedData formats={exportFormats} />
