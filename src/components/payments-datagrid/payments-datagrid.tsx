@@ -7,6 +7,11 @@ import DataGrid, {
   Scrolling,
   Item as ItemDataGrid,
   Toolbar,
+  Summary,
+  TotalItem,
+  Column,
+  Lookup,
+  Button as ButtonDataGrid,
 } from 'devextreme-react/data-grid'
 import Button from 'devextreme-react/button'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -50,41 +55,6 @@ type MembersAutocomplete = {
   id: string
   fullName: string
 }
-
-const paymentsColumnsDefinition = [
-  {
-    dataField: 'id',
-    visible: false,
-  },
-  {
-    dataField: 'member.membershipNumber',
-    caption: 'Nº Socio',
-    visible: false,
-  },
-  {
-    dataField: 'member.fullName',
-    caption: 'Nome Completo',
-  },
-  {
-    dataField: 'paymentType',
-    caption: 'Tipo de Pagamento',
-  },
-  {
-    dataField: 'paymentMethod',
-    caption: 'Método de Pagamento',
-  },
-  {
-    dataField: 'paymentAmount',
-    caption: 'Valor Pago',
-    format: '€ #,##0.##',
-  },
-  {
-    dataField: 'createdAt',
-    caption: 'Data de Pagamento',
-    dataType: 'datetime',
-    format: 'dd-MM-yyyy',
-  },
-]
 
 const monthlyFilterLabel = { 'aria-label': 'Filtro por mês' }
 const monthlyFilter = [
@@ -178,6 +148,10 @@ const PaymentsDatagrid = () => {
     gridRef.current?.instance.refresh()
   }, [])
 
+  const handleGenerateReceiptClick = useCallback((e: any) => {
+    const row = e.row.data
+  }, [])
+
   const createPaymentAsync = useCallback(() => {
     const formInstance = formRef.current?.instance
 
@@ -229,6 +203,7 @@ const PaymentsDatagrid = () => {
 
     setPopupVisible(false)
     formInstance?.option('formData', null)
+    gridRef.current?.instance.refresh()
   }, [])
 
   const getSaveButtonOptions = useCallback(
@@ -248,7 +223,6 @@ const PaymentsDatagrid = () => {
         dataSource={gridDataSource}
         showBorders={false}
         height={700}
-        defaultColumns={paymentsColumnsDefinition}
         ref={gridRef}
         columnAutoWidth={true}
       >
@@ -299,6 +273,50 @@ const PaymentsDatagrid = () => {
             />
           </ItemDataGrid>
         </Toolbar>
+        <Column dataField="id" visible={false} />
+        <Column
+          dataField="member.membershipNumber"
+          caption="Nº Socio"
+          visible={false}
+        />
+        <Column dataField="member.fullName" caption="Nome Completo" />
+        <Column dataField="paymentType" caption="Tipo de Pagamento">
+          <Lookup dataSource={paymentType} displayExpr="text" valueExpr="id" />
+        </Column>
+        <Column dataField="paymentMethod" caption="Método de Pagamento">
+          <Lookup
+            dataSource={paymentMethod}
+            displayExpr="text"
+            valueExpr="id"
+          />
+        </Column>
+        <Column
+          dataField="paymentAmount"
+          caption="Valor Pago"
+          format="€ #,##0.##"
+        />
+        <Column
+          dataField="paymentDate"
+          caption="Data de Pagamento"
+          dataType="date"
+          format="dd-MM-yyyy"
+        />
+        <Column type="buttons" width={110}>
+          <ButtonDataGrid
+            text="Gerar Recibo"
+            icon="print"
+            hint="Gerar Recibo"
+            onClick={handleGenerateReceiptClick}
+          />
+        </Column>
+        <Summary>
+          <TotalItem column="member.fullName" summaryType="count" />
+          <TotalItem
+            column="paymentAmount"
+            summaryType="sum"
+            valueFormat="€ #,##0.##"
+          />
+        </Summary>
       </DataGrid>
       <Popup
         visible={popupVisible}
