@@ -37,7 +37,7 @@ config({
 
 const exportFormats = ['xlsx', 'pdf']
 
-const datepickOptions = {
+export const datepickOptions = {
   placeholder: 'dd-MM-yyyy',
   showClearButton: true,
   useMaskBehavior: true,
@@ -81,45 +81,6 @@ const MembersDataGrid = () => {
 
   const handleRefreshClick = useCallback(() => {
     gridRef.current?.instance.refresh()
-  }, [])
-
-  const handleEditorPreparing = useCallback((e: any) => {
-    if (e.parentType === 'dataRow' && e.dataField === 'Address.postalCode') {
-      e.editorOptions.onValueChanged = async function (arg: any) {
-        // get postal code data
-        const postalCode = arg.value.replace(/(\d{4})(\d{3})/, '$1-$2')
-        try {
-          const response = await fetch(
-            `https://json.geoapi.pt/codigo_postal/${postalCode}`,
-          )
-          if (response.ok) {
-            const postalCodeData: PostalCodeType = await response.json()
-
-            e.component.cellValue(
-              e.row.rowIndex,
-              'Address.city',
-              postalCodeData.city,
-            )
-            e.component.cellValue(
-              e.row.rowIndex,
-              'Address.county',
-              postalCodeData.county,
-            )
-            e.component.cellValue(
-              e.row.rowIndex,
-              'Address.parish',
-              postalCodeData.parish,
-            )
-          } else {
-            throw new Error('Failed to fetch postal code')
-          }
-        } catch (error) {
-          console.log(error)
-        }
-        e.setValue(arg.value)
-        gridRef.current?.instance.getDataSource().reload()
-      }
-    }
   }, [])
 
   useEffect(() => {
