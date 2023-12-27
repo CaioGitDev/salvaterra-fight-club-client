@@ -12,9 +12,9 @@
   "dependencies": {
     "@ignite-ui/react": "^2.2.4",
     "date-fns": "^2.30.0",
-    "devextreme": "23.1.6",
+    "devextreme": "^23.2.3",
     "devextreme-aspnet-data-nojquery": "^3.0.0",
-    "devextreme-react": "23.1.6",
+    "devextreme-react": "^23.2.3",
     "jspdf": "^2.5.1",
     "next": "14.0.2",
     "react": "^18",
