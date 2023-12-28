@@ -30,6 +30,7 @@ import PostMemberPaymentAsync, {
 } from '@/data/payments-form/post-member-payment'
 import CustomStore from 'devextreme/data/custom_store'
 import FetchMembersPaymentsAsync from '@/data/payments-datagrid/fetch-members-payments'
+import BuildPaymentReceiptPDF from '@/utils/payment-receipt/build-payment-receipt-PDF'
 
 config({
   editorStylingMode: 'underlined',
@@ -149,7 +150,17 @@ const PaymentsDatagrid = () => {
   }, [])
 
   const handleGenerateReceiptClick = useCallback((e: any) => {
-    const row = e.row.data
+    const payment: Payment = e.row.data
+    const pdfBuilder = new BuildPaymentReceiptPDF(payment, {
+      recieptNumber: '0001',
+      recieptDate: new Date(),
+      recieptEmail: ' geral@salvaterrafightclub.pt',
+      recieptTaxNumber: ' 517719282',
+    })
+
+    const document = pdfBuilder.CreatePDFDocument()
+
+    document.download()
   }, [])
 
   const createPaymentAsync = useCallback(() => {

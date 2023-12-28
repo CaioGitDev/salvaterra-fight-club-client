@@ -16,6 +16,17 @@ export type Payment = {
   member: {
     membershipNumber: number
     fullName: string
+    Address: [
+      {
+        postalCode: number
+        parish: string
+      },
+    ]
+    IdentityDocument: [
+      {
+        taxIdentificationNumber: number
+      },
+    ]
   }
 }
 
