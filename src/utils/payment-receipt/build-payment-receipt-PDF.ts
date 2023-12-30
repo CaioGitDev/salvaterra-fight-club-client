@@ -1,23 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable new-cap */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { Payment } from '@/data/payments-form/post-member-payment'
 import * as pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import logo from './logo-base64'
-
-type RecieptProps = {
-  recieptNumber: string
-  recieptDate: Date
-  recieptEmail: string
-  recieptTaxNumber: string
-}
+import { Payment, ReceiptProps } from '../types/payments'
 
 class BuildPaymentReceiptPDF {
   constructor(
     private payment: Payment,
-    private reciept: RecieptProps,
+    private reciept: ReceiptProps,
   ) {}
 
   defaultData = {
@@ -121,12 +111,12 @@ class BuildPaymentReceiptPDF {
             },
             {
               lineHeight: 1,
-              text: `Recibo Nº RC ${this.reciept.recieptNumber}`,
+              text: `Recibo Nº RC ${this.reciept.receiptNumber}`,
               style: headerStyles.secondaryText,
             },
             {
               lineHeight: 1,
-              text: `Data da emissão: ${this.reciept.recieptDate.toLocaleDateString(
+              text: `Data da emissão: ${this.reciept.receiptDate.toLocaleDateString(
                 'pt-BR',
               )}`,
               style: headerStyles.tertiaryText,
@@ -208,7 +198,7 @@ class BuildPaymentReceiptPDF {
             style: { fontSize: 10, bold: true, alignment: 'left' },
           },
           {
-            text: this.reciept.recieptEmail,
+            text: this.reciept.receiptEmail,
             style: { fontSize: 10, bold: false, alignment: 'left' },
           },
         ],
@@ -221,7 +211,7 @@ class BuildPaymentReceiptPDF {
             style: { fontSize: 10, bold: true, alignment: 'left' },
           },
           {
-            text: this.reciept.recieptTaxNumber,
+            text: this.reciept.receiptTaxNumber,
             style: { fontSize: 10, bold: false, alignment: 'left' },
           },
         ],
@@ -278,7 +268,7 @@ class BuildPaymentReceiptPDF {
 
     table.push([
       {
-        text: new Date(this.reciept.recieptDate).toLocaleDateString('pt-BR'),
+        text: new Date(this.reciept.receiptDate).toLocaleDateString('pt-BR'),
         style: tableStyles.tableRow,
       },
       {

@@ -4,6 +4,7 @@ import './ui/globals.css'
 import Navbar from './ui/navbar/navbar'
 import SideBar from './ui/sidebar/sidebar'
 import styles from './ui/layout.module.css'
+import Provider from '@/utils/providers'
 const roboto = Roboto({ weight: ['400', '500', '700'], subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default function RootLayout({
           </div>
           <div className={styles.content}>
             <Navbar />
-            {children}
+            <Provider>{children}</Provider>
           </div>
         </div>
       </body>

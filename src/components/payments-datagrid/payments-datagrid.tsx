@@ -1,6 +1,7 @@
 'use client'
 import '@/theme/dx.material.salvaterra-fight-club-theme.css'
 import styles from './payments-datagrid.module.css'
+import { confirm } from 'devextreme/ui/dialog'
 import DataGrid, {
   FilterRow,
   HeaderFilter,
@@ -17,28 +18,22 @@ import Button from 'devextreme-react/button'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import config from 'devextreme/core/config'
 import SelectBox from 'devextreme-react/select-box'
-import { ValueChangedEvent } from 'devextreme/ui/select_box'
 import Popup, { ToolbarItem } from 'devextreme-react/popup'
 import ScrollView from 'devextreme-react/scroll-view'
 import Form, { Item } from 'devextreme-react/form'
 import { datepickOptions } from '../members-datagrid/members-datagrid'
-import FetchMembersColumns from '@/data/payments-datagrid/fetch-members-columns'
 import DataSource from 'devextreme/data/data_source'
 import notify from 'devextreme/ui/notify'
-import PostMemberPaymentAsync, {
-  Payment,
-} from '@/data/payments-form/post-member-payment'
-import CustomStore from 'devextreme/data/custom_store'
-import FetchMembersPaymentsAsync from '@/data/payments-datagrid/fetch-members-payments'
 import BuildPaymentReceiptPDF from '@/utils/payment-receipt/build-payment-receipt-PDF'
+import { Payment, PaymentToDb, ReceiptToDb } from '@/utils/types/payments'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { AxiosInterceptorInstance } from '@/services/axios-interceptor-instance'
+import dxForm from 'devextreme/ui/form'
 
 config({
   editorStylingMode: 'underlined',
 })
 
-const apiUrl = 'http://localhost:3333'
-const accessToken =
-  'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMTA3YTgzNS1kYzNmLTQ5OGItYWJlZS1kOTM1NDJmYTg1YjYiLCJpYXQiOjE3MDM2MzIyNjZ9.igk_An_aVDEMav-Tg_aHorFLqJsBD44AzGmJVG4xuKSkYP_tEZ6K62ZmGJWQwRU8qiUKTU5hdk2yUtVBqopwDMZf1Rhtv_Yj4updOg6Y66HhRCzWaFQzVaYnXzetxINcaT-GPfI4IT75Aaal_NtN03yOuT813SgurTRVzxb2mxnExVAzFLfVFKG4t5XN9sttwAJ5wU1cJUuSAv-ii_3ldgF9_lAb30a1sepsmCyVE7D0_WGbPD8uVlaa8Ol6rvKBsMYg1LZDRh8EsuUQEelaloM63-WKma2bF_WbWqKOkQiiKAhVO-ZBlq-fbSTCkdpGigfUVjh3CKSYih7Vq1pH-A'
 const paymentMethod = [
   { id: 'MBWAY', text: 'MBWAY' },
   { id: 'MULTIBANCO', text: 'Multibanco' },
@@ -80,52 +75,62 @@ const getCurrentMonth = () => {
   return month
 }
 
-const membersColumnsToGetAutocomplete = ['id', 'fullName']
-
 const PaymentsDatagrid = () => {
+  const queryClient = useQueryClient()
   const [currentMonth, setCurrentMonth] = useState(getCurrentMonth())
   const [popupVisible, setPopupVisible] = useState(false)
-  const [membersColumns, setMembersColumns] =
+  const [membersNamesAutocomplete, setMembersNamesAutocomplete] =
     useState<DataSource<MembersAutocomplete, string>>()
 
-  // Assuming your initial state is undefined, you can set it to an empty array if you prefer
-  const [gridDataSource, setGridDataSource] =
-    useState<CustomStore<Payment[], string>>()
+  const [gridDataSource, setGridDataSource] = useState<Payment[]>()
 
   const gridRef = useRef<DataGrid>(null)
   const formRef = useRef<Form>(null)
 
-  useEffect(() => {
-    setGridDataSource(
-      new CustomStore<Payment[]>({
-        key: 'id',
-        load: async () => {
-          const payments = await FetchMembersPaymentsAsync({
-            apiUrl,
-            accessToken,
-          })
+  const { data: payments } = useQuery({
+    queryKey: ['membersPayments'],
+    queryFn: async () => {
+      const { data } = await AxiosInterceptorInstance.get('/members/payments')
+      const { payments } = data
+      return payments
+    },
+  })
 
-          return payments
-        },
-      }),
-    )
-  }, [])
+  const { data: namesAutocomplete } = useQuery({
+    queryKey: ['membersNamesAutocomplete'],
+    queryFn: async () => {
+      const { data } = await AxiosInterceptorInstance.post('/members/columns', {
+        columns: ['id', 'fullName'],
+      })
+      const { members } = data
+      members.sort((a: { fullName: string }, b: { fullName: any }) =>
+        a.fullName.localeCompare(b.fullName),
+      )
+      return members
+    },
+  })
+
+  const paymentMutation = useMutation({
+    mutationFn: async (payment: PaymentToDb) => {
+      const { data } = await AxiosInterceptorInstance.post(
+        '/member/payment',
+        payment,
+      )
+      const { payment: newPayment } = data
+      return newPayment
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['membersPayments'] })
+    },
+  })
 
   useEffect(() => {
-    setMembersColumns(
-      new DataSource({
-        key: 'id',
-        loadMode: 'raw',
-        load: () =>
-          FetchMembersColumns({
-            apiUrl,
-            accessToken,
-            columns: membersColumnsToGetAutocomplete,
-          }),
-        sort: [{ selector: 'fullName', desc: false }],
-      }),
-    )
-  }, [])
+    setGridDataSource(payments)
+  }, [payments])
+
+  useEffect(() => {
+    setMembersNamesAutocomplete(namesAutocomplete)
+  }, [namesAutocomplete])
 
   const handleAddPaymentClick = useCallback(() => {
     setPopupVisible(true)
@@ -135,87 +140,107 @@ const PaymentsDatagrid = () => {
     setPopupVisible(false)
   }, [])
 
-  const handleOnValueChangedFilter = useCallback(
-    ({ value }: ValueChangedEvent) => {
-      const dataGrid = gridRef.current?.instance
-      if (dataGrid) {
-        // dataGrid.filter(['Task_Status', '=', value])
-      }
-    },
-    [gridRef],
-  )
+  const handleOnValueChangedFilter = useCallback(() => {
+    const dataGrid = gridRef.current?.instance
+    if (dataGrid) {
+      // dataGrid.filter(['Task_Status', '=', value])
+    }
+  }, [gridRef])
 
   const handleRefreshClick = useCallback(() => {
     gridRef.current?.instance.refresh()
   }, [])
 
-  const handleGenerateReceiptClick = useCallback((e: any) => {
-    const payment: Payment = e.row.data
-    const pdfBuilder = new BuildPaymentReceiptPDF(payment, {
-      recieptNumber: '0001',
-      recieptDate: new Date(),
-      recieptEmail: ' geral@salvaterrafightclub.pt',
-      recieptTaxNumber: ' 517719282',
-    })
+  const generateReceiptMutation = useMutation({
+    mutationFn: async (receiptToDb: ReceiptToDb) => {
+      const { data } = await AxiosInterceptorInstance.post(
+        '/payment/receipts',
+        receiptToDb,
+      )
+      const { receipt: newReceipt } = data
+      return newReceipt
+    },
+  })
 
-    const document = pdfBuilder.CreatePDFDocument()
+  const formatReceiptNumber = (receiptNumber: number, receiptYear: number) => {
+    return `${receiptNumber.toString().padStart(4, '0')}/${receiptYear}`
+  }
 
-    document.download()
-  }, [])
+  const handleGenerateReceiptClick = useCallback(
+    (e: any) => {
+      const payment: Payment = e.row.data
+
+      confirm(
+        'Tem a certeza que pretende gerar o recibo?',
+        'Gerar Recibo',
+      ).then(async (result) => {
+        if (result) {
+          const data = await generateReceiptMutation.mutateAsync({
+            paymentId: payment.id,
+            receiptTaxDescription: 'Insento Artigo 9.º do CIVA (Ou similar)',
+            receiptTaxPercentage: 0,
+          })
+
+          const formatedReceiptNumber = formatReceiptNumber(
+            data.receiptNumber,
+            data.receiptYear,
+          )
+
+          const pdfBuilder = new BuildPaymentReceiptPDF(payment, {
+            receiptNumber: formatedReceiptNumber,
+            receiptDate: new Date(data.createdAt),
+            receiptEmail: ' geral@salvaterrafghtclub.pt',
+            receiptTaxNumber: ' 517719282',
+          })
+
+          const document = pdfBuilder.CreatePDFDocument()
+
+          const fileName = `${payment.member.fullName
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-zA-Z0-9]/g, '-')
+            .toLowerCase()}-${formatedReceiptNumber.replace('/', '-')}.pdf`
+          document.download(fileName)
+        }
+      })
+    },
+    [generateReceiptMutation],
+  )
+
+  function validateFormInstance(form: dxForm) {
+    const { isValid } = form.validate()
+    if (!isValid) {
+      notify(
+        {
+          message: 'Preencha os campos obrigatórios',
+        },
+        'error',
+        3000,
+      )
+    }
+    return isValid
+  }
 
   const createPaymentAsync = useCallback(() => {
     const formInstance = formRef.current?.instance
+    const formData = formInstance?.option('formData')
 
-    if (!formInstance?.validate().isValid) {
-      notify(
-        {
-          message: 'Por favor preencha todos os campos obrigatórios',
-          position: {
-            my: 'center',
-            at: 'center',
-          },
-        },
-        'error',
-        3000,
-      )
+    if (formInstance && formData && !validateFormInstance(formInstance)) {
       return
     }
-    const { memberId, paymentType, paymentMethod, paymentAmount, paymentDate } =
-      formInstance?.option('formData')
 
-    // post payment data to api
-    const payment = PostMemberPaymentAsync(
-      {
-        apiUrl,
-        accessToken,
-      },
-      {
-        memberId,
-        paymentType,
-        paymentMethod,
-        paymentAmount,
-        paymentDate,
-      },
-    )
+    const payment = formData as PaymentToDb
+    paymentMutation.mutate(payment)
 
-    if (!payment) {
-      notify(
-        {
-          message: 'Ocorreu um erro ao adicionar o pagamento',
-          position: {
-            my: 'center',
-            at: 'center',
-          },
-        },
-        'error',
-        3000,
-      )
+    if (paymentMutation.isError && paymentMutation.error) {
+      notify(paymentMutation.error.message, 'error', 3000)
+      return
     }
 
     setPopupVisible(false)
     formInstance?.option('formData', null)
     gridRef.current?.instance.refresh()
-  }, [])
+  }, [paymentMutation])
 
   const getSaveButtonOptions = useCallback(
     () => ({
@@ -343,7 +368,7 @@ const PaymentsDatagrid = () => {
           toolbar="bottom"
           location="after"
           options={getSaveButtonOptions()}
-        />
+        ></ToolbarItem>
         <ScrollView width="100%" height="100%">
           <Form ref={formRef} showValidationSummary={true} colCount={2}>
             <Item
@@ -352,7 +377,7 @@ const PaymentsDatagrid = () => {
               dataField="memberId"
               editorType="dxSelectBox"
               editorOptions={{
-                dataSource: membersColumns,
+                dataSource: membersNamesAutocomplete,
                 displayExpr: 'fullName',
                 valueExpr: 'id',
                 searchEnabled: true,
