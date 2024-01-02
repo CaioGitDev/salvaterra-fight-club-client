@@ -83,6 +83,8 @@ const PaymentsDatagrid = () => {
     useState<DataSource<MembersAutocomplete, string>>()
 
   const [gridDataSource, setGridDataSource] = useState<Payment[]>()
+  const [isGenerateReceiptButtonVisible, setIsGenerateReceiptButtonVisible] =
+    useState(true)
 
   const gridRef = useRef<DataGrid>(null)
   const formRef = useRef<Form>(null)
@@ -340,9 +342,10 @@ const PaymentsDatagrid = () => {
         <Column type="buttons" width={110}>
           <ButtonDataGrid
             text="Gerar Recibo"
-            icon="print"
+            icon="check"
             hint="Gerar Recibo"
             onClick={handleGenerateReceiptClick}
+            visible={isGenerateReceiptButtonVisible}
           />
         </Column>
         <Summary>

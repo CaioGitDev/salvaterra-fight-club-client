@@ -223,7 +223,7 @@ class BuildPaymentReceiptPDF {
         lineHeight: 3,
         text: this.payment.member.fullName,
         style: {
-          fontSize: 14,
+          fontSize: 12,
           bold: true,
           alignment: 'left',
         },
