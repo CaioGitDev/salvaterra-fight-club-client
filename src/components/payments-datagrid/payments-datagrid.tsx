@@ -105,7 +105,7 @@ const PaymentsDatagrid = () => {
         columns: ['id', 'fullName'],
       })
       const { members } = data
-      members.sort((a: { fullName: string }, b: { fullName: any }) =>
+      members.sort((a: { fullName: string }, b: { fullName: string }) =>
         a.fullName.localeCompare(b.fullName),
       )
       return members
