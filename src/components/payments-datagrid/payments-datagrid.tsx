@@ -29,6 +29,7 @@ import { Payment, PaymentToDb, ReceiptToDb } from '@/utils/types/payments'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AxiosInterceptorInstance } from '@/services/axios-interceptor-instance'
 import dxForm from 'devextreme/ui/form'
+import query from 'devextreme/data/query'
 
 config({
   editorStylingMode: 'underlined',
@@ -70,14 +71,17 @@ const monthlyFilter = [
 
 // create method to get current month and return it as index
 const getCurrentMonth = () => {
-  const date = new Date()
-  const month = date.getMonth()
-  return month
+  return new Date().getMonth()
+}
+
+const getCurrentYear = () => {
+  return new Date().getFullYear()
 }
 
 const PaymentsDatagrid = () => {
   const queryClient = useQueryClient()
   const [currentMonth, setCurrentMonth] = useState(getCurrentMonth())
+  const [currentYear, setCurrentYear] = useState(getCurrentYear())
   const [popupVisible, setPopupVisible] = useState(false)
   const [membersNamesAutocomplete, setMembersNamesAutocomplete] =
     useState<DataSource<MembersAutocomplete, string>>()
@@ -89,10 +93,12 @@ const PaymentsDatagrid = () => {
   const gridRef = useRef<DataGrid>(null)
   const formRef = useRef<Form>(null)
 
-  const { data: payments } = useQuery({
+  const { data: payments, refetch } = useQuery({
     queryKey: ['membersPayments'],
     queryFn: async () => {
-      const { data } = await AxiosInterceptorInstance.get('/members/payments')
+      const { data } = await AxiosInterceptorInstance.get(
+        `/members/payments/${currentMonth + 1}/${currentYear}`,
+      )
       const { payments } = data
       return payments
     },
@@ -142,16 +148,19 @@ const PaymentsDatagrid = () => {
     setPopupVisible(false)
   }, [])
 
-  const handleOnValueChangedFilter = useCallback(() => {
-    const dataGrid = gridRef.current?.instance
-    if (dataGrid) {
-      // dataGrid.filter(['Task_Status', '=', value])
-    }
-  }, [gridRef])
-
-  const handleRefreshClick = useCallback(() => {
-    gridRef.current?.instance.refresh()
+  const handleOnMonthValueChangedFilter = useCallback((e: any) => {
+    const monthIndex = monthlyFilter.indexOf(e.value)
+    setCurrentMonth(monthIndex)
   }, [])
+
+  const handleOnYearValueChangedFilter = useCallback((e: any) => {
+    setCurrentYear(e.value)
+  }, [])
+
+  const handleRefreshClick = useCallback(async () => {
+    refetch()
+    gridRef.current?.instance.refresh()
+  }, [refetch])
 
   const generateReceiptMutation = useMutation({
     mutationFn: async (receiptToDb: ReceiptToDb) => {
@@ -307,7 +316,20 @@ const PaymentsDatagrid = () => {
               items={monthlyFilter}
               inputAttr={monthlyFilterLabel}
               value={monthlyFilter[currentMonth]}
-              onValueChanged={handleOnValueChangedFilter}
+              onValueChanged={handleOnMonthValueChangedFilter}
+            />
+          </ItemDataGrid>
+          <ItemDataGrid
+            location="after"
+            locateInMenu="auto"
+            showText="inMenu"
+            widget="dxSelectBox"
+          >
+            <SelectBox
+              items={[currentYear - 1, currentYear, currentYear + 1]}
+              inputAttr={monthlyFilterLabel}
+              value={currentYear}
+              onValueChanged={handleOnYearValueChangedFilter}
             />
           </ItemDataGrid>
         </Toolbar>

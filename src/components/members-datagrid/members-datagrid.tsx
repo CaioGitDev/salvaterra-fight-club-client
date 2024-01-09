@@ -269,6 +269,22 @@ const MembersDataGrid = () => {
               body: JSON.stringify(identityDocumentData),
             })
           }
+
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          values.Address = undefined
+          values.Guardian = undefined
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          values.IdentityDocument = undefined
+          await fetch(`${apiUrl}/member/${key}`, {
+            headers: {
+              'content-type': 'application/json',
+              Authorization: `Bearer ${accessToken}`,
+            },
+            method: 'PUT',
+            body: JSON.stringify(values),
+          })
         },
       }),
     )
