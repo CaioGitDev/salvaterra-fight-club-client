@@ -30,6 +30,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AxiosInterceptorInstance } from '@/services/axios-interceptor-instance'
 import dxForm from 'devextreme/ui/form'
 import query from 'devextreme/data/query'
+import PaymentsSummary, {
+  paymentsSummaryProps,
+} from '../payments-summary/payments-sumarry'
 
 config({
   editorStylingMode: 'underlined',
@@ -87,20 +90,21 @@ const PaymentsDatagrid = () => {
     useState<DataSource<MembersAutocomplete, string>>()
 
   const [gridDataSource, setGridDataSource] = useState<Payment[]>()
+  const [summary, setSummaries] = useState<paymentsSummaryProps>()
   const [isGenerateReceiptButtonVisible, setIsGenerateReceiptButtonVisible] =
     useState(true)
 
   const gridRef = useRef<DataGrid>(null)
   const formRef = useRef<Form>(null)
 
-  const { data: payments, refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['membersPayments'],
     queryFn: async () => {
       const { data } = await AxiosInterceptorInstance.get(
         `/members/payments/${currentMonth + 1}/${currentYear}`,
       )
-      const { payments } = data
-      return payments
+      const { payments, summary } = data
+      return { payments, summary }
     },
   })
 
@@ -133,8 +137,9 @@ const PaymentsDatagrid = () => {
   })
 
   useEffect(() => {
-    setGridDataSource(payments)
-  }, [payments])
+    setGridDataSource(data?.payments)
+    setSummaries(data?.summary)
+  }, [data?.payments, data?.summary])
 
   useEffect(() => {
     setMembersNamesAutocomplete(namesAutocomplete)
@@ -265,6 +270,8 @@ const PaymentsDatagrid = () => {
 
   return (
     <div suppressHydrationWarning className="dx-viewport p-5">
+      {summary && <PaymentsSummary summary={summary} />}
+
       <div className={styles.right_side}></div>
       <DataGrid
         dataSource={gridDataSource}
