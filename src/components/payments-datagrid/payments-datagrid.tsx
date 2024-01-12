@@ -29,7 +29,6 @@ import { Payment, PaymentToDb, ReceiptToDb } from '@/utils/types/payments'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AxiosInterceptorInstance } from '@/services/axios-interceptor-instance'
 import dxForm from 'devextreme/ui/form'
-import query from 'devextreme/data/query'
 import PaymentsSummary, {
   paymentsSummaryProps,
 } from '../payments-summary/payments-sumarry'
