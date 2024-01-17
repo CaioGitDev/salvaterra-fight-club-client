@@ -9,6 +9,7 @@ import {
   MdOutlineCalendarMonth,
   MdLogout,
   MdOutlineInventory,
+  MdChecklist,
 } from 'react-icons/md'
 import MenuLink from '@/components/menu-link/menu-link'
 import Image from 'next/image'
@@ -25,6 +26,12 @@ const menuItems = [
         title: 'Dashboard',
         path: '/dashboard',
         icon: <MdDashboard />,
+      },
+      {
+        id: randomUUID(),
+        title: 'Presenças',
+        path: '/attendance',
+        icon: <MdChecklist />,
       },
       {
         id: randomUUID(),
