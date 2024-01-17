@@ -21,7 +21,7 @@ const modalities = [
 ]
 
 type AttendanceSelectedList = {
-  currentDate: Date
+  attendanceDate: Date
   modalityId: number
   memberId: string
 }
@@ -33,12 +33,12 @@ type AttendanceMember = {
 }
 
 const Attendance = () => {
-  const [currentValue, setCurrentValue] = useState(new Date())
+  const [attendanceDate, setattendanceDate] = useState(new Date())
   const [currentModality, setCurrentModality] = useState(modalities[0])
   const [selectedItemKeys, setSelectedItemKeys] = useState<string[]>([])
 
-  const onCurrentValueChange = useCallback(({ value }: ValueChangedEvent) => {
-    setCurrentValue(value)
+  const onAttendanceDateChange = useCallback(({ value }: ValueChangedEvent) => {
+    setattendanceDate(value)
   }, [])
 
   const { data: attendanceMembersList } = useQuery({
@@ -58,10 +58,16 @@ const Attendance = () => {
   const attendanceMutation = useMutation({
     mutationFn: async (attendanceSelectedList: AttendanceSelectedList) => {
       const { data } = await AxiosInterceptorInstance.post(
-        '/attendance',
+        '/attendances',
         attendanceSelectedList,
       )
       return data
+    },
+  })
+
+  const deleteAttendanceMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await AxiosInterceptorInstance.delete(`/attendances/${id}`)
     },
   })
 
@@ -74,7 +80,7 @@ const Attendance = () => {
 
       if (addedItem && !selectedItemKeys.includes(addedItem.id)) {
         attendanceMutation.mutate({
-          currentDate: currentValue,
+          attendanceDate,
           modalityId: currentModality.id,
           memberId: addedItem.id,
         })
@@ -82,12 +88,19 @@ const Attendance = () => {
       }
 
       if (removedItem) {
+        deleteAttendanceMutation.mutate(removedItem.id)
         setSelectedItemKeys(
           selectedItemKeys.filter((id) => id !== removedItem.id),
         )
       }
     },
-    [attendanceMutation, currentModality.id, currentValue, selectedItemKeys],
+    [
+      selectedItemKeys,
+      attendanceMutation,
+      attendanceDate,
+      currentModality.id,
+      deleteAttendanceMutation,
+    ],
   )
 
   const attendanceMembersDataSource = new DataSource({
@@ -104,8 +117,8 @@ const Attendance = () => {
       <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-2">
         <div>
           <Calendar
-            value={currentValue}
-            onValueChanged={onCurrentValueChange}
+            value={attendanceDate}
+            onValueChanged={onAttendanceDateChange}
             showWeekNumbers={true}
             width={500}
             height={500}
