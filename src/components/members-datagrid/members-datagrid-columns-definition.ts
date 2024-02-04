@@ -13,6 +13,7 @@ export default function getColumnsDefinition(serviceData: ServiceDataType) {
     {
       dataField: 'fullName',
       caption: 'Nome Completo',
+      minWidth: 400,
     },
     {
       dataField: 'genderId',

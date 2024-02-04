@@ -13,6 +13,7 @@ import DataGrid, {
   Column,
   Lookup,
   Button as ButtonDataGrid,
+  Grouping,
 } from 'devextreme-react/data-grid'
 import Button from 'devextreme-react/button'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -282,6 +283,7 @@ const PaymentsDatagrid = () => {
         <FilterRow visible={true} />
         <HeaderFilter visible={true} />
         <Scrolling mode="virtual" />
+        <Grouping autoExpandAll={true} allowCollapsing={true} />
         <Toolbar>
           <ItemDataGrid location="before">
             <div className="grid-header">Pagamentos Mensal</div>
@@ -345,8 +347,16 @@ const PaymentsDatagrid = () => {
           caption="Nº Socio"
           visible={false}
         />
-        <Column dataField="member.fullName" caption="Nome Completo" />
-        <Column dataField="paymentType" caption="Tipo de Pagamento">
+        <Column
+          dataField="member.fullName"
+          caption="Nome Completo"
+          minWidth={400}
+        />
+        <Column
+          dataField="paymentType"
+          caption="Tipo de Pagamento"
+          groupIndex={0}
+        >
           <Lookup dataSource={paymentType} displayExpr="text" valueExpr="id" />
         </Column>
         <Column dataField="paymentMethod" caption="Método de Pagamento">
