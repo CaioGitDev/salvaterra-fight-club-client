@@ -1,7 +1,7 @@
 import { GoChecklist, GoCreditCard, GoPeople } from 'react-icons/go'
 import PaymentsSummaryCard from '../payments-summary-card/payments-summary-card'
 
-type membersWithoutPaymentProps = {
+export type membersWithoutPaymentProps = {
   id: string
   fullName: string
 }
@@ -18,6 +18,11 @@ interface PaymentsSummaryProps {
 }
 
 const PaymentsSummary = ({ summary }: PaymentsSummaryProps) => {
+  const handleCardClick = (membersData: membersWithoutPaymentProps) => {
+    // Handle click logic here
+    console.log('Card clicked with data:', membersData)
+  }
+
   return (
     <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
       <PaymentsSummaryCard
@@ -38,6 +43,7 @@ const PaymentsSummary = ({ summary }: PaymentsSummaryProps) => {
         title="Pagamentos em Falta"
         description={`${summary.totalMissingPayments}`}
         icon={<GoChecklist />}
+        onClick={handleCardClick}
       />
     </div>
   )
