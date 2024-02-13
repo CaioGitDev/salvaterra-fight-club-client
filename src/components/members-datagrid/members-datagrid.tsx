@@ -20,6 +20,8 @@ import {
   SearchPanel,
   Export,
   StateStoring,
+  Summary,
+  TotalItem,
 } from 'devextreme-react/data-grid'
 import {
   EmailRule,
@@ -29,7 +31,6 @@ import {
 } from 'devextreme-react/form'
 import config from 'devextreme/core/config'
 import Button from 'devextreme-react/button'
-import { ValueChangedEvent } from 'devextreme/ui/text_box'
 
 config({
   editorStylingMode: 'underlined',
@@ -629,6 +630,9 @@ const MembersDataGrid = () => {
             </Item>
           </Form>
         </Editing>
+        <Summary>
+          <TotalItem column="fullName" summaryType="count" />
+        </Summary>
       </DataGrid>
     </div>
   )

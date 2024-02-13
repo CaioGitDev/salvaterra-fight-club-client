@@ -9,25 +9,18 @@ type PaymentsSummaryCardProps = {
   title: string
   description: string
   icon: ReactNode
-  onClick?: (members: membersWithoutPaymentProps) => void
+  membersWithoutPayments?: membersWithoutPaymentProps[]
 }
 
 const PaymentsSummaryCard = ({
   title,
   description,
   icon,
-  onClick,
+  membersWithoutPayments,
 }: PaymentsSummaryCardProps) => {
   const handleClick = () => {
-    // Assuming you have membersWithoutPaymentProps data
-    const membersData: membersWithoutPaymentProps = {
-      id: '123', // Example data
-      fullName: 'John Doe', // Example data
-    }
-
-    // Call the onClick function if provided
-    if (onClick) {
-      onClick(membersData)
+    if (membersWithoutPayments) {
+      console.log(membersWithoutPayments)
     }
   }
 

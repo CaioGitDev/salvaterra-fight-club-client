@@ -352,11 +352,7 @@ const PaymentsDatagrid = () => {
           caption="Nome Completo"
           minWidth={400}
         />
-        <Column
-          dataField="paymentType"
-          caption="Tipo de Pagamento"
-          groupIndex={0}
-        >
+        <Column dataField="paymentType" caption="Tipo de Pagamento">
           <Lookup dataSource={paymentType} displayExpr="text" valueExpr="id" />
         </Column>
         <Column dataField="paymentMethod" caption="Método de Pagamento">
