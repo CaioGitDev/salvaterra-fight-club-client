@@ -141,6 +141,10 @@ const modalitiesList: OptionLists[] = [
     id: 3,
     text: 'Muay Thai + Jiu-Jitsu',
   },
+  {
+    id: 4,
+    text: 'Jiu-Jitsu Kids',
+  },
 ]
 
 const frequencyList: OptionLists[] = [

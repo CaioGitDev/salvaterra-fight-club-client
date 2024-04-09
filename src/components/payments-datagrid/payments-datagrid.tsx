@@ -182,6 +182,13 @@ const PaymentsDatagrid = () => {
     return `${receiptNumber.toString().padStart(4, '0')}/${receiptYear}`
   }
 
+  const handleEditClick = useCallback((e: any) => {
+    const payment: Payment = e.row.data
+    const formInstance = formRef.current?.instance
+    formInstance?.option('formData', payment)
+    setPopupVisible(true)
+  }, [])
+
   const handleGenerateReceiptClick = useCallback(
     (e: any) => {
       const payment: Payment = e.row.data
@@ -380,6 +387,12 @@ const PaymentsDatagrid = () => {
             hint="Gerar Recibo"
             onClick={handleGenerateReceiptClick}
             visible={isGenerateReceiptButtonVisible}
+          />
+          <ButtonDataGrid
+            text="Editar"
+            icon="edit"
+            hint="Editar registo"
+            onClick={handleEditClick}
           />
         </Column>
         <Summary>
