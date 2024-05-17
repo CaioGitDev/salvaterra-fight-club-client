@@ -72,6 +72,10 @@ const nacionalitiesList: OptionLists[] = [
     id: 14,
     text: 'Indiano',
   },
+  {
+    id: 15,
+    text: 'Nepal',
+  },
 ]
 
 const identificationDocumentList: OptionLists[] = [
