@@ -253,6 +253,7 @@ const PaymentsDatagrid = () => {
     }
 
     const payment = formData as PaymentToDb
+    payment.paymentDate = convertToLocaleDate(formData.paymentDate)
     paymentMutation.mutate(payment)
 
     if (paymentMutation.isError && paymentMutation.error) {
@@ -264,6 +265,13 @@ const PaymentsDatagrid = () => {
     formInstance?.option('formData', null)
     gridRef.current?.instance.refresh()
   }, [paymentMutation])
+
+  // Function to convert date to local timezone
+  function convertToLocaleDate(date: Date): Date {
+    const offset = date.getTimezoneOffset()
+    const localTime = date.getTime() - offset * 60 * 1000
+    return new Date(localTime)
+  }
 
   const getSaveButtonOptions = useCallback(
     () => ({
