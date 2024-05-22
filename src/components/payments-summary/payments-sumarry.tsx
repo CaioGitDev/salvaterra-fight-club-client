@@ -1,9 +1,12 @@
-import { GoChecklist, GoCreditCard, GoPeople } from 'react-icons/go'
+import { GoChecklist, GoCreditCard } from 'react-icons/go'
 import PaymentsSummaryCard from '../payments-summary-card/payments-summary-card'
 
 export type membersWithoutPaymentProps = {
   id: string
   fullName: string
+  modality: {
+    name: string
+  }
 }
 
 export type paymentsSummaryProps = {
@@ -26,12 +29,14 @@ const PaymentsSummary = ({ summary }: PaymentsSummaryProps) => {
           summary.totalMembers
         }`}
         icon={<GoCreditCard />}
+        blurDescription={false}
       />
 
       <PaymentsSummaryCard
         title="Total Recebido"
         description={`€ ${summary.totalPaymentsAmount}`}
         icon={<GoChecklist />}
+        blurDescription={true}
       />
 
       <PaymentsSummaryCard
@@ -39,6 +44,7 @@ const PaymentsSummary = ({ summary }: PaymentsSummaryProps) => {
         description={`${summary.totalMissingPayments}`}
         icon={<GoChecklist />}
         membersWithoutPayments={summary.membersWithoutPayment}
+        blurDescription={false}
       />
     </div>
   )
