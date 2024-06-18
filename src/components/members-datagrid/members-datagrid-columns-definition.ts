@@ -1,4 +1,6 @@
 import { ServiceDataType } from '@/data/members-seed/members-datagrid-seed'
+import { DataGridTypes } from 'devextreme-react/cjs/data-grid'
+import ActiveMemberBadges from './active-member-badges'
 
 export default function getColumnsDefinition(serviceData: ServiceDataType) {
   return [
@@ -178,6 +180,18 @@ export default function getColumnsDefinition(serviceData: ServiceDataType) {
     {
       dataField: 'healthDeclaration',
       visible: false,
+    },
+    {
+      dataField: 'active',
+      visible: true,
+      cellTemplate: (
+        container: HTMLElement,
+        { row }: DataGridTypes.ColumnCellTemplateData,
+      ) => {
+        const { active } = row.data
+
+        return ActiveMemberBadges(active)
+      },
     },
   ]
 }
