@@ -627,6 +627,17 @@ const MembersDataGrid = () => {
                 colCount={2}
                 colSpan={2}
               />
+              <Item
+                dataField="active"
+                label={{
+                  text: 'Membro Ativo',
+                  location: 'left',
+                }}
+                editorType="dxSwitch"
+                colCount={2}
+                colSpan={2}
+                editorOptions={{ value: true }}
+              />
             </Item>
           </Form>
         </Editing>
