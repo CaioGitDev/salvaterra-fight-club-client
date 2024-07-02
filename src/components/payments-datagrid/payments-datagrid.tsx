@@ -454,7 +454,7 @@ const PaymentsDatagrid = () => {
                 items: paymentType,
                 valueExpr: 'id',
                 displayExpr: 'text',
-                onContentReady(e: DataGridTypes.ContentReadyEvent) {
+                onInitialized(e: DataGridTypes.ContentReadyEvent) {
                   if (!e.component.option('value')) {
                     e.component.option('value', 'COTA_MENSAL')
                   }
@@ -481,7 +481,7 @@ const PaymentsDatagrid = () => {
                 items: paymentMethod,
                 valueExpr: 'id',
                 displayExpr: 'text',
-                onContentReady(e: DataGridTypes.ContentReadyEvent) {
+                onInitialized(e: DataGridTypes.ContentReadyEvent) {
                   if (!e.component.option('value')) {
                     e.component.option('value', 'DINHEIRO')
                   }
