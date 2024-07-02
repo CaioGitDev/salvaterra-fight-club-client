@@ -14,6 +14,7 @@ import DataGrid, {
   Lookup,
   Button as ButtonDataGrid,
   Grouping,
+  DataGridTypes,
 } from 'devextreme-react/data-grid'
 import Button from 'devextreme-react/button'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -447,11 +448,17 @@ const PaymentsDatagrid = () => {
             <Item
               isRequired={true}
               dataField="paymentType"
-              editorType="dxSelectBox"
+              editorType="dxRadioGroup"
               editorOptions={{
+                layout: 'horizontal',
                 items: paymentType,
                 valueExpr: 'id',
                 displayExpr: 'text',
+                onContentReady(e: DataGridTypes.ContentReadyEvent) {
+                  if (!e.component.option('value')) {
+                    e.component.option('value', 'COTA_MENSAL')
+                  }
+                },
               }}
               label={{ text: 'Tipo de Pagamento', location: 'top' }}
             />
@@ -468,11 +475,17 @@ const PaymentsDatagrid = () => {
             <Item
               isRequired={true}
               dataField="paymentMethod"
-              editorType="dxSelectBox"
+              editorType="dxRadioGroup"
               editorOptions={{
+                layout: 'horizontal',
                 items: paymentMethod,
                 valueExpr: 'id',
                 displayExpr: 'text',
+                onContentReady(e: DataGridTypes.ContentReadyEvent) {
+                  if (!e.component.option('value')) {
+                    e.component.option('value', 'DINHEIRO')
+                  }
+                },
               }}
               label={{ text: 'Método de Pagamento', location: 'top' }}
             />

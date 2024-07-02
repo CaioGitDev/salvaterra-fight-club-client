@@ -45,6 +45,7 @@ export const datepickOptions = {
   displayFormat: 'dd-MM-yyyy',
   openOnFieldClick: true,
   type: 'date',
+  applyValueMode: 'useButtons',
 }
 
 const phoneNumberOptions = {
