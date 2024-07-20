@@ -45,9 +45,8 @@ export const datepickOptions = {
   displayFormat: 'dd-MM-yyyy',
   openOnFieldClick: true,
   type: 'date',
-  // applyValueMode: 'useButtons',
-  // set value to current day
-  value: new Date(),
+  applyValueMode: 'useButtons',
+  // set value to current date with this format 'dd-MM-yyyy'
 }
 
 const phoneNumberOptions = {

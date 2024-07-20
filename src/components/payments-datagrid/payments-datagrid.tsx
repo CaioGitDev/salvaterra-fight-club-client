@@ -452,6 +452,7 @@ const PaymentsDatagrid = () => {
               editorOptions={{
                 layout: 'horizontal',
                 items: paymentType,
+                value: 'COTA_MENSAL',
                 valueExpr: 'id',
                 displayExpr: 'text',
                 onInitialized(e: DataGridTypes.ContentReadyEvent) {
@@ -479,6 +480,7 @@ const PaymentsDatagrid = () => {
               editorOptions={{
                 layout: 'horizontal',
                 items: paymentMethod,
+                value: 'DINHEIRO',
                 valueExpr: 'id',
                 displayExpr: 'text',
                 onInitialized(e: DataGridTypes.ContentReadyEvent) {
