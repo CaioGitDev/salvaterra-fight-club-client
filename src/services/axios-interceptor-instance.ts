@@ -1,8 +1,28 @@
 'use client'
 import axios from 'axios'
 
-const accessToken =
-  'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMTA3YTgzNS1kYzNmLTQ5OGItYWJlZS1kOTM1NDJmYTg1YjYiLCJpYXQiOjE3MTk5NTg3NDd9.fFFWtM6Z_gjguJ0mpm2sq785T5zhRNKh1RolxY-YBYImvPFyxyIDYYcCbbI-03IKfvSbFDTXodAQVNeAoDydPLnKfZqUkW7VxLbpku_EHkV3P31Akw7YUz9AVuuSfogd8LZwah96liMbXTldkaPoX65tzqzqARAZV6UAUmN3020O8SgKnfvN5xC5hq0xqsr1rXLFzOI8r5e4UHRjm1-0EWBhCQ_Izk4TrMcyWGnQRQ1qTspEZy8Hs5AKyJlNJe5QPtDs2SYl2iV-u7hYbjQHbb-Dw-NKOL9WUK4jCcx6afupHzOhjvhgE6PH1pSiBMe81Y4JHyn-SMdNEndxM1XKgQ'
+// call and get the access token from httponly cookie
+let accessToken =
+  document?.cookie?.split('; ').find((row) => row.startsWith('accessToken')) ??
+  ''.split('=')[1]
+
+if (!accessToken) {
+  fetch('http://localhost:3333/sessions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({
+      email: 'dev.caiorosa@gmail.com',
+      password: '123456',
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      document.cookie = `accessToken=${data.accessToken}; path=/`
+      accessToken = data.accessToken
+    })
+}
+
 export const AxiosInterceptorInstance = axios.create({
   baseURL: 'http://localhost:3333',
   headers: {
