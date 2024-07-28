@@ -2,7 +2,7 @@
  * @description Public routes
  * @type {string[]}
  */
-export const publicRoutes: string[] = ['/']
+export const publicRoutes: string[] = []
 
 /**
  * @description Authentication routes
