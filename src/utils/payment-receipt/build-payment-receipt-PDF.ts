@@ -17,14 +17,6 @@ class BuildPaymentReceiptPDF {
       right: 31.7,
       bottom: 25.4,
     },
-    fonts: {
-      Roboto: {
-        normal: 'Roboto-Regular.ttf',
-        bold: 'Roboto-Medium.ttf',
-        italics: 'Roboto-Italic.ttf',
-        bolditalics: 'Roboto-MediumItalic.ttf',
-      },
-    },
     metaData: {
       title: 'Salvaterra Fight Club - Recibo',
       author: 'dev.caiorosa',
@@ -35,11 +27,11 @@ class BuildPaymentReceiptPDF {
   }
 
   CreatePDFDocument() {
+    // Configura o vfs (Virtual File System) com as fontes embutidas do pdfmake
     // @ts-ignore
     pdfMake.vfs = pdfFonts.pdfMake.vfs
-    // @ts-ignore
-    pdfMake.fonts = this.defaultData.fonts
 
+    // Não é necessário definir fonts, pois as fontes nativas já estão disponíveis
     const documentDefinition = this.BuildDocumentDefinition()
 
     // @ts-ignore
@@ -48,13 +40,9 @@ class BuildPaymentReceiptPDF {
 
   BuildDocumentDefinition() {
     return {
-      // a string or { width: number, height: number }
       pageSize: 'A4',
-      // by default we use portrait, you can change it to landscape if you wish
       pageOrientation: 'portrait',
-      // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
       pageMargins: [this.defaultData.pageMargins.left, 110, 20, 60],
-      // set document metadata
       info: this.defaultData.metaData,
 
       header: (currentPage: number, pageCount: number) => {
@@ -340,7 +328,6 @@ class BuildPaymentReceiptPDF {
     }
   }
 
-  // create function to format 2120060 to 2120-060
   FormatPostalCode = (postalCode: number) => {
     const postalCodeString = postalCode.toString()
     const postalCodeFormated = `${postalCodeString.slice(
